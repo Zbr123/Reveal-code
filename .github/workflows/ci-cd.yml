@@ -21,20 +21,38 @@ jobs:
           echo "Running Security Checks.. 3"
           sleep 5s
 
-  BuildNDeploy:
-    name: BuildNDeploy
-    needs: [SecurityCheck]
+  Build:
+    name: Build
+    needs: SecurityCheck
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository
         uses: actions/checkout@v2
 
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' 
+
       - name: Install Dependencies
         run: |
           echo "Running Installing Dependencies ..."
           npm install --force
-          echo "Building and Deploying..."
+          echo "Building ..."
           nohup npm run start > /dev/null 2>&1 &
-
-          
-    
+  Deploy:
+    name: Deploy
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact from Build Job
+        uses: actions/download-artifact@v2
+        with:
+          name: built-app # Use the name of the artifact you've uploaded in the Build job
+  
+      - name: Deploy to Hosting Service
+        run: |
+          # Use the CLI or API of your hosting service to deploy the application
+          # This could be using SSH to transfer files, using a service's CLI like Firebase or AWS,
+          # or any other mechanism your hosting service requires
+  
