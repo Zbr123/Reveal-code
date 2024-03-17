@@ -1,6 +1,7 @@
 name: ci-cd
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -37,6 +38,7 @@ jobs:
           repo: revealapi
           github_token: ${{ secrets.R_ACCESS_TOKEN }}
           workflow_file_name: JMeterTest.yml
+          ref: main
 
 
       - name: Install Dependencies
