@@ -24,7 +24,7 @@ jobs:
 
   BuildNDeploy:
     name: BuildNDeploy
-    needs: [SecurityCheck]
+    needs: SecurityCheck
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository
@@ -32,7 +32,6 @@ jobs:
 
       - name: Trigger Workflow and Wait
         uses: convictional/trigger-workflow-and-wait@v1.6.5
-  
         with:
           owner: zbr123
           repo: revealapi
@@ -40,13 +39,9 @@ jobs:
           workflow_file_name: JMeterTest.yml
           ref: main
 
-
       - name: Install Dependencies
         run: |
           echo "Running Installing Dependencies ..."
           npm install --force
           echo "Building and Deploying..."
           nohup npm run start > /dev/null 2>&1 &
-
-          
-    
