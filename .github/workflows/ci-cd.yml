@@ -39,9 +39,10 @@ jobs:
           workflow_file_name: JMeterTest.yml
           ref: main
 
+          
       - name: Install Dependencies
         run: |
           echo "Running Installing Dependencies ..."
           npm install --force
           echo "Building and Deploying..."
-          nohup npm run start > /dev/null 2>&1 &
+          nohup npm run start > /dev/null 2>&1 Z
