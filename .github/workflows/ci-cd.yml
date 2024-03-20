@@ -14,12 +14,7 @@ jobs:
       - name: Check for Security
         run: |
           echo "Running Security Checks.."
-          sleep 5s
-          echo "Running Security Checks.. 1"
-          sleep 5s
-          echo "Running Security Checks.. 2"
-          sleep 5s
-          echo "Running Security Checks.. 3"
+          # Replace with actual security check commands
           sleep 5s
 
   BuildNDeploy:
@@ -30,19 +25,28 @@ jobs:
       - name: Clone Repository
         uses: actions/checkout@v2
 
-      - name: Trigger Workflow and Wait
-        uses: convictional/trigger-workflow-and-wait@v1.6.5
-        with:
-          owner: zbr123
-          repo: revealapi
-          github_token: ${{ secrets.R_ACCESS_TOKEN }}
-          workflow_file_name: JMeterTest.yml
-          ref: main
+      - name: Manually Trigger JMETER Workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.R_ACCESS_TOKEN }}  
+        run: |
+          # Trigger the workflow
+          response=$(curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            https://api.github.com/repos/Zbr123/revealapi/actions/workflows/JMeterTest.yml/dispatches \
+            -d '{"ref":"main"}')
+          echo "Workflow dispatched. Response: $response"
 
-          
       - name: Install Dependencies
         run: |
-          echo "Running Installing Dependencies ..."
+          echo "Installing Dependencies..."
           npm install --force
-          echo "Building and Deploying..."
-          nohup npm run start > /dev/null 2>&1 Z
+          
+      - name: Build and Deploy
+        run: |
+          echo "Building..."
+           npm run build
+          echo "Deploying..."
+          # npm run deploy
+          # Or if you're just starting a server:
+           npm run start
